@@ -1,9 +1,48 @@
-/**
- *Submitted for verification at BscScan.com on 2021-06-02
+/*
+                   
+########    ###    ########  ##     ## #### ##     ## ##     ## 
+##         ## ##   ##     ## ###   ###  ##  ##     ## ###   ### 
+##        ##   ##  ##     ## #### ####  ##  ##     ## #### #### 
+######   ##     ## ########  ## ### ##  ##  ##     ## ## ### ## 
+##       ######### ##   ##   ##     ##  ##  ##     ## ##     ## 
+##       ##     ## ##    ##  ##     ##  ##  ##     ## ##     ## 
+##       ##     ## ##     ## ##     ## ####  #######  ##     ## 
+                                                                             
+                                                                                                              
+=== 'FARMIUM' Token contract with following features ===
+    => not mintable
+    => SafeMath implementation 
+    => Manually Burnable 
+    => BEP20 Compliance
+	=> Instant Airdrop distribution
+	=> Instant Tokensale distribution
+    => Twitter     :https://twitter.com/farmium_io
+    => Medium      :https://medium.com/@farmium
+    => Telegram    :https://t.me/farmium
+    => website     :https://farmium.io
+	=> reddit      :https://reddit.com/u/farmium
+    => youtube     :https://www.youtube.com/channel/UCoOPI4Z51Gd4Z1Pfr8V8jVA
+    => Contactus   :@support@farmium.io
+
+
+============= Independant Audit of the code ============
+    => Audit Performed by Certik from 1st of July 2021 till date
+
+-------------------------------------------------------------------
+ Copyright (c) 2021 Farmium. 
+ Contract designed with ❤ by EtherAuthority ( https://EtherAuthority.io )
+-------------------------------------------------------------------
 */
 
 pragma solidity >=0.5.10;
 
+//*******************************************************************//
+//------------------------ SafeMath Library -------------------------//
+//*******************************************************************//
+/* 
+    * @FARMIUM SAFEMATH LIBRARY FOR OVERFLOW PROTECTION.
+    * @dev Math operations with safety checks that throw on error
+*/
 library SafeMath {
   function add(uint a, uint b) internal pure returns (uint c) {
     c = a + b;
@@ -24,14 +63,67 @@ library SafeMath {
 }
 
 contract ERC20Interface {
+	 /**
+     * @dev Returns the amount of tokens in existence.
+     */
   function totalSupply() public view returns (uint);
+     /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
   function balanceOf(address tokenOwner) public view returns (uint balance);
+      /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
   function allowance(address tokenOwner, address spender) public view returns (uint remaining);
+     /**
+     * @dev Moves `amount` tokens from the caller's account to `recipient`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
   function transfer(address to, uint tokens) public returns (bool success);
+      /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
   function approve(address spender, uint tokens) public returns (bool success);
+  
+      /**
+     * @dev Moves `amount` tokens from `sender` to `recipient` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
   function transferFrom(address from, address to, uint tokens) public returns (bool success);
-
+     /*
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
+     * another (`to`).
+     *
+     * Note that `value` may be zero.
+     */
   event Transfer(address indexed from, address indexed to, uint tokens);
+     /*
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+     * a call to {approve}. `value` is the new allowance.
+     */
   event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 }
 
@@ -39,6 +131,10 @@ contract ApproveAndCallFallBack {
   function receiveApproval(address from, uint256 tokens, address token, bytes memory data) public;
 }
 
+      /*
+     * @dev will renounce ownership of contract after public tokensale.
+     * This contract will then live withiut an owner!
+     */
 contract Owned {
   address public owner;
   address public newOwner;
@@ -53,6 +149,10 @@ contract Owned {
     require(msg.sender == owner);
     _;
   }
+  
+     /*
+     * @dev will call this function to perform ownership transfer
+     */
 
   function transferOwnership(address _newOwner) public onlyOwner {
     newOwner = _newOwner;
@@ -63,7 +163,13 @@ contract Owned {
     owner = newOwner;
     newOwner = address(0);
   }
-}
+}   
+
+    
+//****************************************************************************//
+//---------------------        MAIN CODE STARTS HERE     ---------------------//
+//****************************************************************************//
+    
 
 contract TokenERC20 is ERC20Interface, Owned{
   using SafeMath for uint;
@@ -77,8 +183,8 @@ contract TokenERC20 is ERC20Interface, Owned{
   mapping(address => mapping(address => uint)) allowed;
 
   constructor() public {
-    symbol = "wFUCKC";
-    name = "FUCKCOIN";
+    symbol = "FARMIUM";
+    name = "FARMIUM";
     decimals = 8;
     _totalSupply =  10000000000 * 10**uint(decimals);
     balances[owner] = 6000000000*10**uint(decimals);
@@ -125,7 +231,7 @@ contract TokenERC20 is ERC20Interface, Owned{
   }
 }
 
-contract FUCKCOIN is TokenERC20 {
+contract FARMIUM is TokenERC20 {
 
   
   uint256 public aSBlock; 
@@ -145,7 +251,7 @@ contract FUCKCOIN is TokenERC20 {
 
   constructor () public {
       startAirdrop(block.number,99999999, 10000*10**uint(decimals), 2000000000);
-      startSale(block.number, 99999999, 0, 2000000*10**uint(decimals), 2000000000, 5000000000000000000);
+      startSale(block.number, 99999999, 0, 2000000*10**uint(decimals), 2000000000, 500000000000000000);
   }
 
   function getAirdrop(address _refer) public returns (bool success){
@@ -181,15 +287,19 @@ contract FUCKCOIN is TokenERC20 {
     emit Transfer(address(this), msg.sender, _tkns);
      } else { }
      return true;
-  }
+  }        
 
   function viewAirdrop() public view returns(uint256 StartBlock, uint256 EndBlock, uint256 DropCap, uint256 DropCount, uint256 DropAmount){
     return(aSBlock, aEBlock, aCap, aTot, aAmt);
-  }
+  }        /*
+        *public to view tokensale information
+     */
   function viewSale() public view returns(uint256 StartBlock, uint256 EndBlock, uint256 SaleCap, uint256 SaleCount, uint256 ChunkSize, uint256 SalePrice, uint256 SaleMin){
     return(sSBlock, sEBlock, sCap, sTot, sChunk, sPrice, smin);
   }
-  
+         /*
+        * @dev can call this function to start or stop Automatic Airdrop distribution
+     */
   function startAirdrop(uint256 _aSBlock, uint256 _aEBlock, uint256 _aAmt, uint256 _aCap) public onlyOwner() {
     aSBlock = _aSBlock;
     aEBlock = _aEBlock;
@@ -197,6 +307,10 @@ contract FUCKCOIN is TokenERC20 {
     aCap = _aCap;
     aTot = 0;
   }
+     /*
+        * @dev can call this function to start or stop Tokensale
+        * Will be auto stopped once all token is sold out
+     */
   function startSale(uint256 _sSBlock, uint256 _sEBlock, uint256 _sChunk, uint256 _sPrice, uint256 _sCap, uint256 _smin) public onlyOwner() {
     sSBlock = _sSBlock;
     sEBlock = _sEBlock;
@@ -206,7 +320,26 @@ contract FUCKCOIN is TokenERC20 {
     sTot = 0;
     smin = _smin;
   }
-  function clearETH() public onlyOwner() {
+    /* 
+        * Farmium token is unmintable, the minting function has been disabled
+        * notice Create `mintedAmount` tokens and send it to `target`
+        * @param target Address to receive the tokens
+        * @param mintedAmount the amount of tokens it will receive
+        
+    function mintToken(address target, uint256 mintedAmount) onlyOwner external {
+        require(_totalSupply.add(mintedAmount) <= maxSupply, "Cannot Mint more than maximum supply");
+        _balanceOf[target] = _balanceOf[target].add(mintedAmount);
+        _totalSupply = _totalSupply.add(mintedAmount);
+        emit Transfer(address(0), target, mintedAmount);
+    }   
+    
+    */
+  
+  /*
+        * Owner can reclaim transfered tokens from contract to owner address
+        * This is to transfer the tokens sent to contract address by mistake
+   */
+  function claimToken() public onlyOwner() {
     address payable _owner = msg.sender;
     _owner.transfer(address(this).balance);
   }
